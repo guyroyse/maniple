@@ -23,14 +23,30 @@ Maniple.SelectBox = {
     var $selectBox = $(selector);
 
     function populate(data, idField, nameField) {
+      clear();
+      addOptions(arrayIt(data), defaultIt(idField, 'id'), defaultIt(nameField, 'name'));
+    }
 
-      if (idField === undefined) idField = 'id';
-      if (nameField === undefined) nameField = 'name';
-
+    function clear() {
       $selectBox.find('option').remove();
-      _.each(data, function(item) {
-        $selectBox.append('<option value="' + item[idField] + '">' + item[nameField] + '</option>');
+    }
+
+    function addOptions(data, idField, nameField) {
+      _(data).each(function(item) {
+        addOption(item[idField], item[nameField]);
       });
+    }
+
+    function addOption(value, text) {
+      $selectBox.append('<option value="' + value + '">' + text + '</option>');
+    }
+
+    function arrayIt(it) {
+      return it instanceof Array ? it : [it];
+    }
+
+    function defaultIt(it, defaultValue) {
+      return it === undefined ? defaultValue : it;
     }
 
     return {
@@ -39,3 +55,4 @@ Maniple.SelectBox = {
 
   }
 };
+
