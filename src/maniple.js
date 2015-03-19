@@ -22,10 +22,14 @@ Maniple.SelectBox = {
 
     var $selectBox = $(selector);
 
-    function populate(data) {
+    function populate(data, idField, nameField) {
+
+      if (idField === undefined) idField = 'id';
+      if (nameField === undefined) nameField = 'name';
+
       $selectBox.find('option').remove();
       _.each(data, function(item) {
-        $selectBox.append('<option value="' + item.id + '">' + item.name + '</option>');
+        $selectBox.append('<option value="' + item[idField] + '">' + item[nameField] + '</option>');
       });
     }
 

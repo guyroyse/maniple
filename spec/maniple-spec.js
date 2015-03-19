@@ -43,16 +43,37 @@ describe("Maniple.SelectBox", function() {
       ]);
     });
 
-    it("populates the select with data from an array of objects with default property names of 'id' and 'name'", function() {
+    it("removes previous entries", function() {
+      expect($('#theId')).not.toContainHtml('<option value="qux">Qux</option>')
+    });
+
+    it("populates the select with data from an array of objects with default property names", function() {
       expect($('#theId')).toContainHtml('<option value="foo">Foo</option>')
       expect($('#theId')).toContainHtml('<option value="bar">Bar</option>')
       expect($('#theId')).toContainHtml('<option value="baz">Baz</option>')
+    });
+
+  });
+
+  when("populating with data from and array of objects with custom property names", function() {
+
+    beforeEach(function() {
+      subject.populate([
+        { i: 'foo', n: 'Foo' },
+        { i: 'bar', n: 'Bar' },
+        { i: 'baz', n: 'Baz' }
+      ], 'i', 'n');
     });
 
     it("removes previous entries", function() {
       expect($('#theId')).not.toContainHtml('<option value="qux">Qux</option>')
     });
 
-  });
+    it("populates the select with data from an array of objects with custom property names", function() {
+      expect($('#theId')).toContainHtml('<option value="foo">Foo</option>')
+      expect($('#theId')).toContainHtml('<option value="bar">Bar</option>')
+      expect($('#theId')).toContainHtml('<option value="baz">Baz</option>')
+    });
 
+  });
 });
