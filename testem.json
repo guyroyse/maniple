@@ -1,0 +1,13 @@
+{
+  "launch" : "phantomjs",
+  "framework" : "jasmine2",
+  "src_files" : [
+    "lib/jquery-2.1.1.js",
+    "lib/underscore.js",
+    "lib/jasmine-jquery.js",
+    "src/**/*.js",
+    "spec/spec-helper.js",
+    "spec/**/*-spec.js"
+  ]
+}
+
