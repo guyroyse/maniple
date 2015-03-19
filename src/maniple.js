@@ -50,7 +50,8 @@ Maniple.SelectBox = {
     }
 
     return {
-      populate: populate
+      populate: populate,
+      clear: clear
     };
 
   }
