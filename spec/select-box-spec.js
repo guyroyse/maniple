@@ -4,7 +4,7 @@ describe("Maniple.SelectBox", function() {
 
   beforeEach(function() {
     setFixtures(
-      '<select id="theId">' +
+      '<select multiple="multiple" id="theId">' +
         '<option value="alpha">Alpha</option>' +
         '<option value="bravo">Bravo</option>' +
         '<option value="charlie">Charlie</option>' +
@@ -19,7 +19,7 @@ describe("Maniple.SelectBox", function() {
     beforeEach(function() {
       subject.clear();
     });
-  
+
     it("removes all entries", function() {
       expect($('#theId')).not.toContainHtml('<option value="alpha">Alpha</option>')
       expect($('#theId')).not.toContainHtml('<option value="bravo">Bravo</option>')
@@ -29,7 +29,7 @@ describe("Maniple.SelectBox", function() {
   });
 
   describe("populate", function() {
-  
+
     when("populating with data from an array of objects with default property names of 'id' and 'name'", function() {
 
       beforeEach(function() {
@@ -113,8 +113,89 @@ describe("Maniple.SelectBox", function() {
       });
 
     });
-  
+
   });
 
-});
+  describe("querying the select box", function() {
 
+    when("no items are selected", function() {
+
+      it("returns null from value", function() {
+        expect(subject.value()).toBeNull();
+      });
+
+      it("returns an empty array from values", function() {
+        expect(subject.values()).toBeEmptyArray();
+      });
+
+      it("returns null from text", function() {
+        expect(subject.text()).toBeNull();
+      });
+
+      it("returns an empty array from texts", function() {
+        expect(subject.texts()).toBeEmptyArray();
+      });
+
+    });
+
+    when("a single item is selected", function() {
+
+      beforeEach(function() {
+        $('#theId').val('bravo');
+      });
+
+      it("returns the selected item from value", function() {
+        expect(subject.value()).toBe('bravo');
+      });
+
+      it("returns the selected item in an array from values", function() {
+        expect(subject.values()).toEqual(['bravo']);
+      });
+
+      it("returns the selected item from text", function() {
+        expect(subject.text()).toBe('Bravo');
+      });
+
+      it("returns the selected item in an array from texts", function() {
+        expect(subject.texts()).toEqual(['Bravo']);
+      });
+
+    });
+
+    when("multiple items are selected", function() {
+
+      beforeEach(function() {
+        $('#theId').val(['alpha', 'charlie']);
+      });
+
+      it("returns the first item from value", function() {
+        expect(subject.value()).toBe('alpha');
+      });
+
+      it("returns the selected items in an array from values", function() {
+        expect(subject.values()).toEqual(['alpha', 'charlie']);
+      });
+
+      it("returns the first item from text", function() {
+        expect(subject.text()).toBe('Alpha');
+      });
+
+      it("returns the selected items in an array from texts", function() {
+        expect(subject.texts()).toEqual(['Alpha', 'Charlie']);
+      });
+
+    });
+
+  });
+
+  // add option permutations
+
+  // by value OR text
+    // deselect item
+    // deselect items
+    // deselect all items
+    // select item
+    // select items
+    // select all items
+
+});
