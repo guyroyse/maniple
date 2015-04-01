@@ -3,11 +3,41 @@ describe("Maniple.SelectBox", function() {
   var subject;
 
   beforeEach(function() {
+
+    var knownOptions = {
+      alpha:   '<option value="alpha">Alpha</option>',
+      bravo:   '<option value="bravo">Bravo</option>',
+      charlie: '<option value="charlie">Charlie</option>',
+      foo:     '<option value="foo">Foo</option>',
+      bar:     '<option value="bar">Bar</option>',
+      baz:     '<option value="baz">Baz</option>'
+    };
+
+    jasmine.addMatchers({
+      toContainOptions : function(util, customEqualityTesters) {
+        return {
+          compare : function(actual) {
+
+            var options = Array.prototype.slice.call(arguments, 1);
+
+            var result = {};
+
+            result.pass = _(options).every(function(option) {
+              return util.contains(actual.html(), knownOptions[option], customEqualityTesters);
+            });
+
+            return result;
+
+          }
+        }
+      }
+    });
+
     setFixtures(
       '<select multiple="multiple" id="theId">' +
-        '<option value="alpha">Alpha</option>' +
-        '<option value="bravo">Bravo</option>' +
-        '<option value="charlie">Charlie</option>' +
+        knownOptions.alpha +
+        knownOptions.bravo +
+        knownOptions.charlie +
       '</select>'
     );
 
@@ -21,9 +51,99 @@ describe("Maniple.SelectBox", function() {
     });
 
     it("removes all entries", function() {
-      expect($('#theId')).not.toContainHtml('<option value="alpha">Alpha</option>')
-      expect($('#theId')).not.toContainHtml('<option value="bravo">Bravo</option>')
-      expect($('#theId')).not.toContainHtml('<option value="charlie">Charlie</option>')
+      expect($('#theId')).not.toContainOptions('alpha', 'bravo', 'charlie');
+    });
+
+  });
+
+  describe("addOption", function() {
+
+    beforeEach(function() {
+      subject.addOption('foo', 'Foo');
+    });
+
+    it("does not remove previous entries", function() {
+      expect($('#theId')).toContainOptions('alpha', 'bravo', 'charlie');
+    });
+
+    it("add the item the select", function() {
+      expect($('#theId')).toContainOptions('foo');
+    });
+
+  });
+
+  describe("addOptions", function() {
+
+    when("adding options with data from an array of objects with default property names of 'id' and 'name'", function() {
+
+      beforeEach(function() {
+        subject.addOptions([
+          { id: 'foo', name: 'Foo' },
+          { id: 'bar', name: 'Bar' },
+          { id: 'baz', name: 'Baz' }
+        ]);
+      });
+
+      it("does not remove previous entries", function() {
+        expect($('#theId')).toContainOptions('alpha', 'bravo', 'charlie');
+      });
+
+      it("adds the items to the select", function() {
+        expect($('#theId')).toContainOptions('foo', 'bar', 'baz');
+      });
+
+    });
+
+    when("adding options with data from and array of objects with custom property names", function() {
+
+      beforeEach(function() {
+        subject.addOptions([
+          { i: 'foo', n: 'Foo' },
+          { i: 'bar', n: 'Bar' },
+          { i: 'baz', n: 'Baz' }
+        ], 'i', 'n');
+      });
+
+      it("does not remove previous entries", function() {
+        expect($('#theId')).toContainOptions('alpha', 'bravo', 'charlie');
+      });
+
+      it("add the items the select", function() {
+        expect($('#theId')).toContainOptions('foo', 'bar', 'baz');
+      });
+
+    });
+
+    when("adding options with data from a single object with default property names of 'id' and 'name'", function() {
+
+      beforeEach(function() {
+        subject.addOptions({ id: 'foo', name: 'Foo' });
+      });
+
+      it("does not remove previous entries", function() {
+        expect($('#theId')).toContainOptions('alpha', 'bravo', 'charlie');
+      });
+
+      it("add the item the select", function() {
+        expect($('#theId')).toContainOptions('foo');
+      });
+
+    });
+
+    when("adding options with data from a single object with custom property names", function() {
+
+      beforeEach(function() {
+        subject.addOptions({ i: 'foo', n: 'Foo' }, 'i', 'n');
+      });
+
+      it("does not remove previous entries", function() {
+        expect($('#theId')).toContainOptions('alpha', 'bravo', 'charlie');
+      });
+
+      it("add the item the select", function() {
+        expect($('#theId')).toContainOptions('foo');
+      });
+
     });
 
   });
@@ -41,15 +161,11 @@ describe("Maniple.SelectBox", function() {
       });
 
       it("removes previous entries", function() {
-        expect($('#theId')).not.toContainHtml('<option value="alpha">Alpha</option>')
-        expect($('#theId')).not.toContainHtml('<option value="bravo">Bravo</option>')
-        expect($('#theId')).not.toContainHtml('<option value="charlie">Charlie</option>')
+        expect($('#theId')).not.toContainOptions('alpha', 'bravo', 'charlie');
       });
 
       it("populates the select", function() {
-        expect($('#theId')).toContainHtml('<option value="foo">Foo</option>')
-        expect($('#theId')).toContainHtml('<option value="bar">Bar</option>')
-        expect($('#theId')).toContainHtml('<option value="baz">Baz</option>')
+        expect($('#theId')).toContainOptions('foo', 'bar', 'baz');
       });
 
     });
@@ -65,15 +181,11 @@ describe("Maniple.SelectBox", function() {
       });
 
       it("removes previous entries", function() {
-        expect($('#theId')).not.toContainHtml('<option value="alpha">Alpha</option>')
-        expect($('#theId')).not.toContainHtml('<option value="bravo">Bravo</option>')
-        expect($('#theId')).not.toContainHtml('<option value="charlie">Charlie</option>')
+        expect($('#theId')).not.toContainOptions('alpha', 'bravo', 'charlie');
       });
 
       it("populates the select", function() {
-        expect($('#theId')).toContainHtml('<option value="foo">Foo</option>')
-        expect($('#theId')).toContainHtml('<option value="bar">Bar</option>')
-        expect($('#theId')).toContainHtml('<option value="baz">Baz</option>')
+        expect($('#theId')).toContainOptions('foo', 'bar', 'baz');
       });
 
     });
@@ -85,13 +197,11 @@ describe("Maniple.SelectBox", function() {
       });
 
       it("removes previous entries", function() {
-        expect($('#theId')).not.toContainHtml('<option value="alpha">Alpha</option>')
-        expect($('#theId')).not.toContainHtml('<option value="bravo">Bravo</option>')
-        expect($('#theId')).not.toContainHtml('<option value="charlie">Charlie</option>')
+        expect($('#theId')).not.toContainOptions('alpha', 'bravo', 'charlie');
       });
 
       it("populates the select", function() {
-        expect($('#theId')).toContainHtml('<option value="foo">Foo</option>')
+        expect($('#theId')).toContainOptions('foo');
       });
 
     });
@@ -103,13 +213,11 @@ describe("Maniple.SelectBox", function() {
       });
 
       it("removes previous entries", function() {
-        expect($('#theId')).not.toContainHtml('<option value="alpha">Alpha</option>')
-        expect($('#theId')).not.toContainHtml('<option value="bravo">Bravo</option>')
-        expect($('#theId')).not.toContainHtml('<option value="charlie">Charlie</option>')
+        expect($('#theId')).not.toContainOptions('alpha', 'bravo', 'charlie');
       });
 
       it("populates the select", function() {
-        expect($('#theId')).toContainHtml('<option value="foo">Foo</option>')
+        expect($('#theId')).toContainOptions('foo');
       });
 
     });
@@ -187,8 +295,6 @@ describe("Maniple.SelectBox", function() {
     });
 
   });
-
-  // add option permutations
 
   // by value OR text
     // deselect item

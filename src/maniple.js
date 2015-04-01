@@ -28,7 +28,7 @@ Maniple.SelectBox = {
 
     function populate(data, idField, nameField) {
       clear();
-      addOptions(arrayIt(data), defaultIt(idField, 'id'), defaultIt(nameField, 'name'));
+      addOptions(data, idField, nameField);
     }
 
     function value() {
@@ -48,8 +48,8 @@ Maniple.SelectBox = {
     }
 
     function addOptions(data, idField, nameField) {
-      _(data).each(function(item) {
-        addOption(item[idField], item[nameField]);
+      _(arrayIt(data)).each(function(item) {
+        addOption(item[defaultIt(idField, 'id')], item[defaultIt(nameField, 'name')]);
       });
     }
 
@@ -91,6 +91,8 @@ Maniple.SelectBox = {
 
     return {
       clear: clear,
+      addOptions: addOptions,
+      addOption: addOption,
       populate: populate,
       value: value,
       values: values,
