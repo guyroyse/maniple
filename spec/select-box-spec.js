@@ -5,13 +5,17 @@ describe("Maniple.SelectBox", function() {
   beforeEach(function() {
 
     var knownOptions = {
-      alpha:   '<option value="alpha">Alpha</option>',
-      bravo:   '<option value="bravo">Bravo</option>',
-      charlie: '<option value="charlie">Charlie</option>',
-      foo:     '<option value="foo">Foo</option>',
-      bar:     '<option value="bar">Bar</option>',
-      baz:     '<option value="baz">Baz</option>'
+      alpha: optionString('alpha', 'Alpha'),
+      bravo: optionString('bravo', 'Bravo'),
+      charlie: optionString('charlie', 'Charlie'),
+      foo: optionString('foo', 'Foo'),
+      bar: optionString('bar', 'Bar'),
+      baz: optionString('baz', 'Baz')
     };
+
+    function optionString(key, value) {
+      return '<option value="' + key +'">' + value + '</option>'
+    }
 
     jasmine.addMatchers({
       toContainOptions : function(util, customEqualityTesters) {
